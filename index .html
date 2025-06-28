@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ma Boutique en Ligne</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f9f9f9; }
+    header { background-color: #333; color: white; padding: 20px; text-align: center; }
+    nav { background-color: #555; color: white; padding: 10px; text-align: center; }
+    nav a { color: white; margin: 0 10px; text-decoration: none; }
+    .container { padding: 20px; }
+    .produits { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+    .produit { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
+    .produit img { width: 100%; height: auto; }
+    .panier { margin-top: 30px; padding: 15px; background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    button { padding: 10px 15px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background-color: #218838; }
+    footer { text-align: center; padding: 10px; background: #333; color: white; margin-top: 40px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Ma Boutique en Ligne</h1>
+  </header>
+
+  <nav>
+    <a href="#">Accueil</a>
+    <a href="#">Produits</a>
+    <a href="#">Contact</a>
+    <a href="#">Panier</a>
+  </nav>
+
+  <div class="container">
+    <div class="produits" id="listeProduits"></div>
+
+    <div class="panier">
+      <h2>Votre panier</h2>
+      <ul id="panierListe"></ul>
+      <p><strong>Total :</strong> <span id="total">0.00</span> €</p>
+      <button onclick="validerCommande()">Valider la commande</button>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Ma Boutique. Tous droits réservés.
+  </footer>
+
+  <script>
+    const produits = [
+      { id: 1, nom: "T-shirt", prix: 15.99, image: "https://via.placeholder.com/200x150" },
+      { id: 2, nom: "Casquette", prix: 10.99, image: "https://via.placeholder.com/200x150" },
+      { id: 3, nom: "Chaussures", prix: 49.99, image: "https://via.placeholder.com/200x150" },
+      { id: 4, nom: "Sac à dos", prix: 25.50, image: "https://via.placeholder.com/200x150" }
+    ];
+
+    const listeProduits = document.getElementById("listeProduits");
+    const panierListe = document.getElementById("panierListe");
+    const total = document.getElementById("total");
+    let panier = [];
+
+    produits.forEach(p => {
+      const div = document.createElement("div");
+      div.className = "produit";
+      div.innerHTML = `
+        <img src="${p.image}" alt="${p.nom}" />
+        <h3>${p.nom}</h3>
+        <p>${p.prix.toFixed(2)} €</p>
+        <button onclick="ajouter(${p.id})">Ajouter au panier</button>
+      `;
+      listeProduits.appendChild(div);
+    });
+
+    function ajouter(id) {
+      const produit = produits.find(p => p.id === id);
+      panier.push(produit);
+      afficherPanier();
+    }
+
+    function afficherPanier() {
+      panierListe.innerHTML = "";
+      let totalPrix = 0;
+      panier.forEach(p => {
+        const li = document.createElement("li");
+        li.textContent = `${p.nom} - ${p.prix.toFixed(2)} €`;
+        panierListe.appendChild(li);
+        totalPrix += p.prix;
+      });
+      total.textContent = totalPrix.toFixed(2);
+    }
+
+    function validerCommande() {
+      alert("Merci pour votre commande !");
+      panier = [];
+      afficherPanier();
+    }
+  </script>
+</body>
+</html>
