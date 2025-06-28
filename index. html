@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ma Boutique en Ligne</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f2f2f2; }
+    header { background: #24292e; color: white; padding: 20px; text-align: center; }
+    nav { background: #0366d6; padding: 10px; text-align: center; }
+    nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: bold; }
+    .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 20px; }
+    .product { background: white; padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .product img { width: 100%; height: 150px; object-fit: cover; }
+    .product button { background: #28a745; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+    .cart { position: fixed; top: 20px; right: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); width: 250px; }
+    .cart h3 { margin-top: 0; }
+    .cart-item { display: flex; justify-content: space-between; margin: 8px 0; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Bienvenue dans ma boutique</h1>
+</header>
+<nav>
+  <a href="#">Accueil</a>
+  <a href="#">Produits</a>
+  <a href="#">Contact</a>
+</nav>
+
+<div class="products" id="product-list"></div>
+
+<div class="cart" id="cart">
+  <h3>Mon Panier</h3>
+  <div id="cart-items">Aucun article</div>
+  <p>Total : <span id="cart-total">0</span> €</p>
+  <button onclick="checkout()">Commander</button>
+</div>
+
+<script>
+const produits = [
+  { id: 1, nom: "Sac moderne", prix: 20, image: "https://via.placeholder.com/200" },
+  { id: 2, nom: "Montre digitale", prix: 45, image: "https://via.placeholder.com/200" },
+  { id: 3, nom: "Écouteurs Bluetooth", prix: 30, image: "https://via.placeholder.com/200" },
+];
+
+let panier = [];
+
+function afficherProduits() {
+  const container = document.getElementById('product-list');
+  produits.forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'product';
+    el.innerHTML = `
+      <img src="${p.image}" alt="${p.nom}" />
+      <h4>${p.nom}</h4>
+      <p>${p.prix} €</p>
+      <button onclick="ajouterAuPanier(${p.id})">Ajouter</button>
+    `;
+    container.appendChild(el);
+  });
+}
+
+function ajouterAuPanier(id) {
+  const prod = produits.find(p => p.id === id);
+  const exist = panier.find(p => p.id === id);
+  if (exist) {
+    exist.qte++;
+  } else {
+    panier.push({ ...prod, qte: 1 });
+  }
+  afficherPanier();
+}
+
+function afficherPanier() {
+  const items = document.getElementById('cart-items');
+  const totalEl = document.getElementById('cart-total');
+  items.innerHTML = '';
+  let total = 0;
+  if (panier.length === 0) {
+    items.textContent = 'Aucun article';
+  } else {
+    panier.forEach(p => {
+      const el = document.createElement('div');
+      el.className = 'cart-item';
+      el.innerHTML = `${p.nom} x${p.qte} <b>${p.qte * p.prix} €</b>`;
+      items.appendChild(el);
+      total += p.qte * p.prix;
+    });
+  }
+  totalEl.textContent = total.toFixed(2);
+}
+
+function checkout() {
+  alert("Commande validée ! Merci de votre achat.");
+  panier = [];
+  afficherPanier();
+}
+
+afficherProduits();
+</script>
+
+</body>
+</html>
